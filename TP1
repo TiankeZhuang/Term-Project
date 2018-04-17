@@ -1,0 +1,138 @@
+from tkinter import *
+from resistor_class import *
+from wire_class import *
+from lightbulb_class import *
+from battery_class import *
+from ammeter_class import *
+from voltmeter_class import *
+
+
+####################################
+# animation framework taken from the 15112 website
+####################################
+
+def init(data):
+    data.rows = 14
+    data.cols = 40
+    data.margin = 20
+    data.pinSize = 9
+    data.separation = 10
+    data.sections = 5
+    data.sectionHeight = data.height // data.sections
+    data.sideBarWidth = 100
+    data.boardWidth = 800
+    data.boardHeight = data.height // 2
+    data.iconSize = data.sectionHeight // 2
+    '''
+    data.resistor = PhotoImage(file = "resistor.gif")
+    data.lightbulb = PhotoImage(file = "lightbulb.gif")
+    data.ammeter = PhotoImage(file = "ammeter.gif")
+    data.voltmeter = PhotoImage(file = "voltmeter.gif")
+    data.battery = PhotoImage(file = "battery.gif")'''
+    pass
+
+def mousePressed(event, data):
+    pass
+
+def keyPressed(event, data):
+    pass
+
+def sideBar(canvas, data):
+    width = data.sideBarWidth
+    height = data.height
+    # draw side bar outline
+    canvas.create_rectangle(data.width - width, 0, 
+            data.width, data.height, 
+            fill = "lightgrey", width = 0)
+    '''
+    for i in range (data.sections):
+        canvas.create_image()
+    pass'''
+
+def drawBoard(canvas, data):
+    # draw base
+    width = data.width - data.sideBarWidth
+    height = data.height
+    # topX, topY, bottomX, bottomY
+    tx = width // 2 - data.boardWidth // 2
+    ty = height // 2 - data.boardHeight // 2
+    bx = width // 2 + data.boardWidth // 2
+    by = height // 2 + data.boardHeight // 2
+    canvas.create_rectangle(tx, ty, bx, by, fill = "lightgrey", width = 0)
+    # draw section
+    for i in range (data.rows):
+        for j in range (data.cols):
+            # p --> pin
+            ptx = tx + data.margin + j * (data.pinSize + data.separation)
+            pty = ty + data.margin + i * (data.pinSize + data.separation)
+            pbx = ptx + data.pinSize
+            pby = pty + data.pinSize
+            # section out the power lines
+            if i == 5 or i == 8:
+                continue
+            canvas.create_rectangle(ptx, pty, pbx, pby, fill = "ivory4", width = 0)
+    # display row letters
+    for row in range (data.rows):
+
+
+
+
+    pass
+
+def drawResistor(canvas, data):
+    pass
+
+def drawWire(canvas, data):
+    pass
+
+def drawSwitch(canvas, data):
+    pass
+
+def drawLightbulb(canvas, data):
+    pass
+
+def redrawAll(canvas, data):
+    sideBar(canvas, data)
+    drawBoard(canvas, data)
+    pass
+
+####################################
+# use the run function as-is
+####################################
+
+def run(width=300, height=300):
+    def redrawAllWrapper(canvas, data):
+        canvas.delete(ALL)
+        canvas.create_rectangle(0, 0, data.width, data.height,
+                                fill='white', width=0)
+        redrawAll(canvas, data)
+        canvas.update()    
+
+    def mousePressedWrapper(event, canvas, data):
+        mousePressed(event, data)
+        redrawAllWrapper(canvas, data)
+
+    def keyPressedWrapper(event, canvas, data):
+        keyPressed(event, data)
+        redrawAllWrapper(canvas, data)
+
+    # Set up data and call init
+    class Struct(object): pass
+    data = Struct()
+    data.width = width
+    data.height = height
+    init(data)
+    # create the root and the canvas
+    root = Tk()
+    canvas = Canvas(root, width=data.width, height=data.height)
+    canvas.pack()
+    # set up events
+    root.bind("<Button-1>", lambda event:
+                            mousePressedWrapper(event, canvas, data))
+    root.bind("<Key>", lambda event:
+                            keyPressedWrapper(event, canvas, data))
+    # and launch the app
+    root.mainloop()  # blocks until window is closed
+    print("bye!")
+
+run(1000, 600)
